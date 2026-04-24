@@ -69,8 +69,7 @@ const Interview = () => {
     }, [ interviewId ])
 
 
-
-    if (loading || !report) {
+    if (!report) {
         return (
             <main className='loading-screen'>
                 <h1>Loading your interview plan...</h1>
@@ -82,6 +81,10 @@ const Interview = () => {
         report.matchScore >= 80 ? 'score--high' :
             report.matchScore >= 60 ? 'score--mid' : 'score--low'
 
+    const scoreLabel = 
+        report.matchScore >= 80 ? 'Strong match for this role' :
+            report.matchScore >= 60 ? 'Good match for this role' :
+                report.matchScore >= 40 ? 'Partial match for this role' : 'Low match for this role'
 
     return (
         <div className='interview-page'>
@@ -166,10 +169,10 @@ const Interview = () => {
                     <div className='match-score'>
                         <p className='match-score__label'>Match Score</p>
                         <div className={`match-score__ring ${scoreColor}`}>
-                            <span className='match-score__value'>{report.matchScore}</span>
-                            <span className='match-score__pct'>%</span>
+                            <span className='match-score__value'>{report.matchScore}%</span>
+                            {/* <span className='match-score__pct'>%</span> */}
                         </div>
-                        <p className='match-score__sub'>Strong match for this role</p>
+                        <p className={`match-score__sub ${scoreColor}`}>{scoreLabel}</p>
                     </div>
 
                     <div className='sidebar-divider' />
@@ -179,9 +182,19 @@ const Interview = () => {
                         <p className='skill-gaps__label'>Skill Gaps</p>
                         <div className='skill-gaps__list'>
                             {report.skillGaps.map((gap, i) => (
-                                <span key={i} className={`skill-tag skill-tag--${gap.severity}`}>
-                                    {gap.skill}
-                                </span>
+                                <div key={i} className={`skill-gap-item skill-gap-item--${gap.severity}`}>
+                                    <div className='skill-gap-item__top'>
+                                        <span className='skill-gap-item__name'>{gap.skill}</span>
+                                        <span className={`skill-gap-item__badge skill-gap-item__badge--${gap.severity}`}>
+                                            {gap.severity}
+                                        </span>
+                                    </div>
+                                    <p className='skill-gap-item__desc'>
+                                        {gap.severity === 'high' && `Critical skill — required multiple times in this job description.`}
+                                        {gap.severity === 'medium' && `Important skill — mentioned as a key requirement for this role.`}
+                                        {gap.severity === 'low' && `Preferred skill — not a hard requirement but adds value.`}
+                                    </p>
+                                </div>
                             ))}
                         </div>
                     </div>

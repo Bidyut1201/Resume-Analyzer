@@ -37,7 +37,7 @@ $severity-low: #3fb950;
 .interview-layout {
     display: flex;
     width: 100%;
-    max-width: 1280px;
+    max-width: 1400px;
     margin: 0 auto;
     background-color: $bg-card;
     border: 1px solid $border-color;
@@ -121,13 +121,6 @@ $severity-low: #3fb950;
     max-height: calc(100vh - 3rem);
     padding-bottom: 5rem;
     align-items: flex-start;
-
-
-
-
-
-
-
 
     section {
         min-height: 100%;
@@ -357,12 +350,14 @@ $severity-low: #3fb950;
 
 // ── Right Sidebar ─────────────────────────────────────────────────────────────
 .interview-sidebar {
-    width: 240px;
+    width: 350px;
     flex-shrink: 0;
     padding: 1.75rem 1.25rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    overflow-y: auto;
+    max-height: calc(100vh - 3rem);
 }
 
 .sidebar-divider {
@@ -376,13 +371,14 @@ $severity-low: #3fb950;
     flex-direction: column;
     align-items: center;
     gap: 0.6rem;
+    // background-color: green;
 
     &__label {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: $text-muted;
+        color: rgb(201,180,180);
         margin: 0;
         align-self: flex-start;
     }
@@ -411,8 +407,8 @@ $severity-low: #3fb950;
     }
 
     &__value {
-        font-size: 1.6rem;
-        font-weight: 800;
+        font-size: 1.3rem;
+        font-weight: 600;
         color: $text-primary;
         line-height: 1;
     }
@@ -426,8 +422,11 @@ $severity-low: #3fb950;
     &__sub {
         margin: 0;
         font-size: 0.75rem;
-        color: $severity-low;
         text-align: center;
+
+        &.score--high { color: $severity-low; }
+        &.score--mid  { color: $severity-medium; }
+        &.score--low  { color: $severity-high; }
     }
 }
 
@@ -435,47 +434,73 @@ $severity-low: #3fb950;
 .skill-gaps {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.7rem;
 
     &__label {
-        font-size: 0.75rem;
+        font-size: 1.1rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: $text-muted;
+        color: rgb(201, 180, 180);
         margin: 0;
     }
 
     &__list {
         display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
+        flex-direction: column;
+        gap: 0;
     }
 }
 
-.skill-tag {
-    font-size: 0.775rem;
-    font-weight: 500;
-    padding: 0.3rem 0.7rem;
-    border-radius: 0.4rem;
-    border: 1px solid;
-    cursor: default;
+.skill-gap-item {
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 8px;
+    padding: 0.65rem 0.75rem;
+    margin-bottom: 0.5rem;
 
-    &--high {
-        color: $severity-high;
-        background-color: rgba($severity-high, 0.1);
-        border-color: rgba($severity-high, 0.25);
+    &__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.3rem;
     }
 
-    &--medium {
-        color: $severity-medium;
-        background-color: rgba($severity-medium, 0.1);
-        border-color: rgba($severity-medium, 0.25);
+    &__name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-primary;
     }
 
-    &--low {
-        color: $severity-low;
-        background-color: rgba($severity-low, 0.1);
-        border-color: rgba($severity-low, 0.25);
+    &__badge {
+        font-size: 0.6rem;
+        font-weight: 700;
+        padding: 0.15rem 0.45rem;
+        border-radius: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        &--high {
+            background: rgba(255, 77, 77, 0.12);
+            color: $severity-high;
+        }
+
+        &--medium {
+            background: rgba(245, 166, 35, 0.12);
+            color: $severity-medium;
+        }
+
+        &--low {
+            background: rgba(63, 185, 80, 0.12);
+            color: $severity-low;
+        }
+    }
+
+    &__desc {
+        font-size: 0.8rem;
+        color: #969da9;
+        line-height: 1.45;
+        margin: 0;
     }
 }
+
