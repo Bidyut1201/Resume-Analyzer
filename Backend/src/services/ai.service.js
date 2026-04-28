@@ -435,15 +435,46 @@ function buildPreparationPlan(skillGaps, resumeText, selfDescription, jobDescrip
   return plan;
 }
 
+// function extractJobTitle(jobDescription) {
+//   const lines = jobDescription.split("\n").map(l => l.trim()).filter(Boolean);
+//   for (const line of lines.slice(0, 3)) {
+//     if (line.length < 80 && /engineer|developer|designer|manager|analyst|scientist|architect|lead|intern/i.test(line)) {
+//       return line.replace(/^(position|role|title|job|hiring for|looking for|seeking)[:\s-]*/i, "").trim();
+//     }
+//   }
+//   const titleMatch = jobDescription.match(/(?:position|role|title|hiring|looking for|seeking)[:\s]+([^\n.]{5,60})/i);
+//   if (titleMatch) return titleMatch[1].trim();
+//   return "Software Engineer";
+// }
+
 function extractJobTitle(jobDescription) {
   const lines = jobDescription.split("\n").map(l => l.trim()).filter(Boolean);
-  for (const line of lines.slice(0, 3)) {
-    if (line.length < 80 && /engineer|developer|designer|manager|analyst|scientist|architect|lead|intern/i.test(line)) {
-      return line.replace(/^(position|role|title|job|hiring for|looking for|seeking)[:\s-]*/i, "").trim();
+
+  // Step 1: Try structured lines (best case)
+  for (const line of lines.slice(0, 5)) {
+    const match = line.match(/(Full Stack Developer|Backend Developer|Frontend Developer|Software Engineer|MERN Developer|Node\.?js Developer)(\s*\([^)]+\))?/i);
+    if (match) {
+      return match[0].trim();
     }
   }
-  const titleMatch = jobDescription.match(/(?:position|role|title|hiring|looking for|seeking)[:\s]+([^\n.]{5,60})/i);
-  if (titleMatch) return titleMatch[1].trim();
+
+  // Step 2: Extract from sentences (unstructured JDs)
+  const sentenceMatch = jobDescription.match(
+    /(?:looking for|seeking|hiring|need)\s+(?:a|an)?\s*([a-zA-Z\s]+?(Developer|Engineer|Manager|Analyst|Architect))(\s*\([^)]+\))?/i
+  );
+
+  if (sentenceMatch) {
+    let title = sentenceMatch[1] + (sentenceMatch[3] || "");
+    
+    // Clean unwanted words
+    title = title
+      .replace(/\b(passionate|dynamic|experienced|talented|motivated)\b/gi, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    return title;
+  }
+
   return "Software Engineer";
 }
 
