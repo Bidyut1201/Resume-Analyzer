@@ -18,7 +18,7 @@ const SKILL_TAXONOMY = [
   "mongodb", "mysql", "postgresql", "sqlite", "redis", "cassandra",
   "dynamodb", "elasticsearch", "firebase", "sql", "nosql", "prisma", "mongoose",
   "aws", "azure", "gcp", "docker", "kubernetes", "terraform", "ansible",
-  "jenkins", "nginx", "linux", "ci/cd", "devops", "git", "github", "gitlab",
+  "jenkins", "nginx", "linux", "ci/cd pipelines", "devops", "git", "github", "gitlab",
   "machine learning", "deep learning", "tensorflow", "pytorch", "keras",
   "scikit-learn", "nlp", "computer vision", "llm", "langchain", "openai",
   "react native", "flutter", "android", "ios",
