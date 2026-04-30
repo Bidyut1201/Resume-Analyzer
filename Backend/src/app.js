@@ -11,6 +11,10 @@ app.use(cors({
     credentials: true
 }))
 
+// Health check for cron-job.org ping
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" })
+})
 
 /* require all the routes here */
 const authRouter = require("./routes/auth.routes")
