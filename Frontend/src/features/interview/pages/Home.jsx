@@ -100,7 +100,8 @@ const Home = () => {
                                 {resumeFileName ? (
                                     <p className='dropzone__subtitle' style={{ color: '#3fb950', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                         <span
-                                            onClick={() => {
+                                            onClick={(e) => {
+                                                e.stopPropagation()
                                                 setResumeFileName('')
                                                 if (resumeInputRef.current) {
                                                     resumeInputRef.current.value = ''
@@ -117,9 +118,7 @@ const Home = () => {
                                         </span>
                                         {resumeFileName}
                                     </p>
-                                ) : (
-                                    <p className='dropzone__subtitle'>PDF only (Max 5MB)</p>
-                                )}
+                                ) : null}
                                 <input
                                     ref={resumeInputRef}
                                     hidden
