@@ -138,6 +138,7 @@ const Home = () => {
                                 ) : (
                                     <p className='dropzone__subtitle'>PDF only (Max 5MB)</p>
                                 )}
+                                
                                 <input
                                     ref={resumeInputRef}
                                     hidden
