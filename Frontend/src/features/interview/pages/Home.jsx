@@ -101,7 +101,8 @@ const Home = () => {
                                     <p className='dropzone__subtitle' style={{ color: '#3fb950', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                         <span
                                             onClick={(e) => {
-                                                e.stopPropagation()
+                                                e.stopPropagation();
+                                                e.preventDefault();
                                                 setResumeFileName('')
                                                 if (resumeInputRef.current) {
                                                     resumeInputRef.current.value = ''
