@@ -3,6 +3,7 @@ import "../style/home.scss"
 import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate } from 'react-router'
 import { useAuth } from '../../auth/hooks/useAuth'
+import toast from 'react-hot-toast'
 
 const Home = () => {
 
@@ -16,16 +17,35 @@ const Home = () => {
     const navigate = useNavigate()
 
     const handleGenerateReport = async () => {
-        const resumeFile = resumeInputRef.current.files[ 0 ]
-        const data = await generateReport({ jobDescription, selfDescription, resumeFile })
-        navigate(`/interview/${data._id}`)
+        const resumeFile = resumeInputRef.current?.files?.[0]
+
+        if (!jobDescription.trim()) {
+            toast.error("Job description is required")
+            return
+        }
+
+        if (!resumeFile && !selfDescription.trim()) {
+            toast.error("Please upload a resume or provide self description")
+            return
+        }
+
+        try {
+            const data = await generateReport({ jobDescription, selfDescription, resumeFile })
+            navigate(`/interview/${data._id}`)
+        } catch (err) {
+            toast.error("Failed to generate report")
+        }
     }
 
     const onLogout = async () => {                              
-        await handleLogout()
-        navigate('/')
+        try {
+            await handleLogout()
+            toast.success("Logged out successfully")
+            navigate('/')
+        } catch {
+            toast.error("Logout failed")
+        }
     }
-
 
     return (
         <div className='home-page'>
@@ -42,7 +62,7 @@ const Home = () => {
             {/* Page Header */}
             <header className='page-header'>
                 <h1>Create Your Custom <span className='highlight'>Interview Plan</span></h1>
-                <p>Let our AI analyze the job requirements and your unique profile to build a winning strategy.</p>
+                <p>Let our System analyze the job requirements and your unique profile to build a winning strategy.</p>
             </header>
 
             {/* Main Card */}
@@ -64,7 +84,9 @@ const Home = () => {
                             placeholder={`Paste the full job description here...\ne.g. 'Senior Frontend Engineer at Google requires proficiency in React, TypeScript, and large-scale system design...'`}
                             maxLength={5000}
                         />
-                        <div className='char-counter'>0 / 5000 chars</div>
+                        <div className='char-counter'>
+                            {jobDescription.length} / 5000 chars
+                        </div>
                     </div>
 
                     {/* Vertical Divider */}
@@ -90,13 +112,7 @@ const Home = () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
                                 </span>
                                 <p className='dropzone__title'>Click to upload or drag &amp; drop</p>
-                                {/* {resumeFileName ? (
-                                    <p className='dropzone__subtitle' style={{color: '#3fb950'}}>
-                                        ✓ {resumeFileName}
-                                    </p>
-                                ) : (
-                                    <p className='dropzone__subtitle'>PDF only (Max 5MB) </p>
-                                )} */}
+                                
                                 {resumeFileName ? (
                                     <p className='dropzone__subtitle' style={{ color: '#3fb950', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                         <span
@@ -131,7 +147,21 @@ const Home = () => {
                                     accept='.pdf'
                                     onChange={(e) => {
                                         const file = e.target.files[0]
-                                        if (file) setResumeFileName(file.name)
+                                        if (file) {
+                                            if (file.type !== "application/pdf") {
+                                                toast.error("Only PDF files are allowed")
+                                                e.target.value = ""  
+                                                return
+                                            }
+
+                                            if (file.size > 5 * 1024 * 1024) {
+                                                toast.error("File size must be less than 5MB")
+                                                e.target.value = ""   
+                                                return
+                                            }
+
+                                            setResumeFileName(file.name)
+                                        }
                                     }}
                                 />
                             </label>
@@ -164,7 +194,7 @@ const Home = () => {
 
                 {/* Card Footer */}
                 <div className='interview-card__footer'>
-                    <span className='footer-info'>AI-Powered Strategy Generation &bull; Approx 30s</span>
+                    <span className='footer-info'>NLP-Powered Strategy Generation &bull; Approx 30s</span>
                     <button
                         onClick={handleGenerateReport}
                         className='generate-btn'>
