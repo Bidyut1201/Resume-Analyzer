@@ -1,4 +1,3 @@
-
 const natural = require("natural");
 const { removeStopwords } = require("stopword");
 const puppeteer = require("puppeteer");
@@ -18,7 +17,7 @@ const SKILL_TAXONOMY = [
   "mongodb", "mysql", "postgresql", "sqlite", "redis", "cassandra",
   "dynamodb", "elasticsearch", "firebase", "sql", "nosql", "prisma", "mongoose",
   "aws", "azure", "gcp", "docker", "kubernetes", "terraform", "ansible",
-  "jenkins", "nginx", "linux", "ci/cd pipelines", "devops", "git", "github", "gitlab",
+  "jenkins", "nginx", "linux", "cicd ","ci cd" ,"devops", "git", "github", "gitlab",
   "machine learning", "deep learning", "tensorflow", "pytorch", "keras",
   "scikit-learn", "nlp", "computer vision", "llm", "langchain", "openai",
   "react native", "flutter", "android", "ios",
@@ -27,6 +26,64 @@ const SKILL_TAXONOMY = [
   "system design", "oop", "functional programming", "mvc", "solid",
   "oauth", "jwt", "authentication", "authorization", "security",
   "caching", "kafka", "rabbitmq", "performance", "blockchain", "web3",
+  "pandas", "numpy", "matplotlib", "seaborn", "plotly", "jupyter",
+  "r", "xgboost", "lightgbm", "statsmodels", "tableau", "power bi", "looker", "dbt","llamaindex", "hugging face", "transformers", "rag", "prompt engineering",
+  "vector databases", "pinecone", "weaviate", "chromadb", "fine-tuning", "anthropic", "ollama",
+  "spark", "hadoop", "airflow", "snowflake", "databricks",
+];
+const JOB_TITLE_TAXONOMY = [
+
+  // ── Software Engineering ──────────────────────────────────────────────────
+  "Full Stack Developer","Full Stack Engineer","Backend Developer","Backend Engineer",
+  "Frontend Developer","Frontend Engineer","Software Engineer","Software Developer",
+  "Junior Software Engineer","Senior Software Engineer","Staff Software Engineer",
+  "Principal Software Engineer","Associate Software Engineer",
+
+  // ── Specialised Engineering ────────────────────────────────────────────────
+  "MERN Stack Developer","MEAN Stack Developer","Node.js Developer","React Developer",
+  "Angular Developer","Vue.js Developer","Python Developer","Java Developer",
+  "Go Developer","Golang Developer","Rust Developer","iOS Developer","Android Developer",
+  "Mobile Developer","Flutter Developer","React Native Developer","Embedded Systems Engineer",
+  "Firmware Engineer","Game Developer","Blockchain Developer","Web3 Developer",
+  "Smart Contract Developer","API Developer",
+
+  // ── Data Science & Analytics ──────────────────────────────────────────────
+  "Data Scientist","Junior Data Scientist","Senior Data Scientist","Lead Data Scientist",
+  "Data Analyst","Junior Data Analyst","Senior Data Analyst","Business Analyst",
+  "Business Intelligence Analyst","BI Developer","BI Engineer","Analytics Engineer",
+  "Quantitative Analyst","Research Scientist","Applied Scientist","Decision Scientist",
+  "Marketing Analyst","Product Analyst","Growth Analyst","Financial Analyst",
+
+  // ── AI / ML Engineering ───────────────────────────────────────────────────
+  "AI Engineer","ML Engineer","Machine Learning Engineer","Deep Learning Engineer",
+  "NLP Engineer","Computer Vision Engineer","AI Research Engineer","Applied ML Engineer",
+  "Generative AI Engineer","LLM Engineer","AI/ML Engineer","Conversational AI Engineer",
+
+  // ── Data Engineering ──────────────────────────────────────────────────────
+  "Data Engineer","Senior Data Engineer","Big Data Engineer","ETL Developer",
+  "Analytics Engineer","Data Platform Engineer","Data Infrastructure Engineer","Data Architect",
+
+  // ── DevOps / Cloud / Platform ─────────────────────────────────────────────
+  "DevOps Engineer","Senior DevOps Engineer","Platform Engineer","Site Reliability Engineer",
+  "SRE","Cloud Engineer","Cloud Architect","Infrastructure Engineer","AWS Engineer",
+  "Azure Engineer","GCP Engineer","MLOps Engineer","DataOps Engineer","Build and Release Engineer",
+
+  // ── Security ──────────────────────────────────────────────────────────────
+  "Security Engineer","Application Security Engineer","Cybersecurity Engineer","Penetration Tester",
+  "Security Analyst",
+
+  // ── Architecture & Leadership ─────────────────────────────────────────────
+  "Solutions Architect","Enterprise Architect","Technical Architect",
+  "Engineering Manager","Engineering Lead","Tech Lead","Technical Lead",
+  
+  // ── QA & Testing ─────────────────────────────────────────────────────────
+  "QA Engineer","SDET","Automation Engineer","Test Engineer","Quality Assurance Engineer",
+
+  // ── Product & Design (common in JDs) ─────────────────────────────────────
+  "Product Manager","Technical Product Manager","UX Engineer","UI Developer","UI/UX Developer",
+
+  // ── Internships & Entry Level ─────────────────────────────────────────────
+  "Software Engineering Intern","Data Science Intern","ML Intern","Frontend Intern","Backend Intern",
 ];
 
 // ─── TECHNICAL QUESTION BANK ─────────────────────────────────────────────────
@@ -111,6 +168,29 @@ const TECHNICAL_QUESTION_BANK = {
     intention: "To assess maturity in balancing business velocity with long-term code quality.",
     answer: "Allocate 20% of each sprint to refactoring and tech debt. Make debt visible by logging it in the backlog with business impact estimates. Use the boy scout rule — always leave code cleaner than you found it. Introduce architectural improvements incrementally using the Strangler Fig pattern for legacy systems. Communicate trade-offs to stakeholders clearly: short-term speed vs long-term maintenance cost."
   },
+  pandas: {
+    question: "How would you use Pandas to clean a messy real-world dataset with missing values, duplicates, and inconsistent types before feeding it into a model?",
+    intention: "To assess practical data wrangling ability, which is 80% of real data science work.",
+    answer: "Use df.info() and df.describe() to understand the data first. Handle nulls with dropna() or fillna() based on context — median for numeric, mode for categoricals. Remove duplicates with drop_duplicates(). Fix types with astype() or pd.to_datetime(). Use str.strip() and str.lower() for string normalization. Chain transformations with method chaining for readability. Always validate the cleaned output shape and null count before proceeding."
+  },
+
+  rag: {
+    question: "Explain how Retrieval-Augmented Generation (RAG) works and how you would implement a basic RAG pipeline.",
+    intention: "To assess practical understanding of LLM application architecture and the ability to ground AI outputs in real data.",
+    answer: "RAG combines a retrieval system with an LLM. Documents are chunked, embedded using a model like text-embedding-ada-002, and stored in a vector database (Pinecone, Weaviate, or ChromaDB). At query time, the user's question is embedded, semantically similar chunks are retrieved, and these are injected into the LLM prompt as context. This grounds the LLM's answer in actual data, reducing hallucinations. Key tuning points: chunk size, overlap, top-k retrieval count, and the prompt template that instructs the model to use only the provided context."
+  },
+
+  spark: {
+    question: "When would you choose Apache Spark over Pandas, and how does Spark handle distributed data processing?",
+    intention: "To assess big data engineering knowledge and understanding of when to scale beyond single-machine tools.",
+    answer: "Use Spark when data exceeds available RAM (typically 10GB+) or when processing speed matters at scale. Spark distributes data into partitions across a cluster. Operations are lazy — they build a DAG of transformations and only execute on an action like collect() or write(). Use DataFrames over RDDs for performance (Catalyst optimizer). Key concepts: transformations (map, filter, groupBy) vs actions (count, show, write). PySpark lets you use a Pandas-like API. For ML at scale, use Spark MLlib."
+  },
+
+  power_bi: {
+    question: "How would you design a Power BI dashboard for business stakeholders? Walk through your data modeling and visualization choices.",
+    intention: "To assess data analytics communication skills and understanding of BI tool best practices.",
+    answer: "Start with the star schema in Power BI's data model: fact tables (sales, transactions) connected to dimension tables (date, product, region). Use DAX measures for KPIs rather than calculated columns to preserve query performance. Design for the audience: executives want high-level KPIs with drill-through, analysts need filters and slicers. Use consistent colors, avoid pie charts for more than 3 segments, and always include a date slicer. Publish to Power BI Service with row-level security if data is sensitive."
+  },
   default: {
     question: "Describe a technically challenging problem you solved recently. What was your approach and what did you learn?",
     intention: "To assess problem-solving ability, depth of technical thinking, and self-awareness.",
@@ -167,6 +247,9 @@ function extractTokens(text) {
 function extractSkills(text) {
   const normalizedText = normalizeText(text);
   const foundSkills = new Set();
+  // Special case: CI/CD appears in many formats
+  if (/\bci[\s/\-]?cd\b/i.test(normalizedText)) foundSkills.add("cicd");
+  if (/\bnext\.?js\b/i.test(normalizedText)) foundSkills.add("nextjs");
   for (const skill of SKILL_TAXONOMY) {
     const escaped = skill.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(`\\b${escaped}\\b`, "i");
@@ -405,6 +488,30 @@ function buildPreparationPlan(skillGaps, resumeText, selfDescription, jobDescrip
       "Practice implementing rate limiting and brute-force protection.",
       "Study HTTPS, HSTS, CORS, and secure cookie configuration."
     ],
+    rag: [
+      "Study the RAG architecture: chunking, embedding, vector retrieval, and prompt injection.",
+      "Build a basic RAG pipeline using LangChain or LlamaIndex with a local PDF as the knowledge base.",
+      "Experiment with chunk sizes (256, 512, 1024 tokens) and measure retrieval quality.",
+      "Learn about advanced RAG patterns: HyDE, re-ranking, and hybrid search."
+    ],
+    pandas: [
+      "Practice the full data cleaning workflow: nulls, duplicates, type casting, and string normalization.",
+      "Study groupby, pivot_table, and merge/join operations with real datasets from Kaggle.",
+      "Learn method chaining and vectorized operations to avoid slow Python loops.",
+      "Practice reading from and writing to CSV, Excel, JSON, and SQL sources."
+    ],
+    spark: [
+      "Set up PySpark locally and process a 1M+ row CSV using DataFrames.",
+      "Understand lazy evaluation, the DAG, and when Spark actually executes.",
+      "Study partitioning strategies and how to avoid data skew.",
+      "Practice writing Spark jobs that read from S3 and write to Parquet format."
+    ],
+    power_bi: [
+      "Build a star schema data model connecting fact and dimension tables.",
+      "Write 5 core DAX measures: total sales, YoY growth, running total, rank, and moving average.",
+      "Design a 3-page dashboard: executive summary, regional breakdown, and trend analysis.",
+      "Publish to Power BI Service and configure row-level security."
+    ],
     default_prep: [
       "Review fundamentals and core concepts listed in the job description.",
       "Practice 5-10 coding challenges on LeetCode or HackerRank (easy/medium level).",
@@ -435,47 +542,59 @@ function buildPreparationPlan(skillGaps, resumeText, selfDescription, jobDescrip
   return plan;
 }
 
-// function extractJobTitle(jobDescription) {
-//   const lines = jobDescription.split("\n").map(l => l.trim()).filter(Boolean);
-//   for (const line of lines.slice(0, 3)) {
-//     if (line.length < 80 && /engineer|developer|designer|manager|analyst|scientist|architect|lead|intern/i.test(line)) {
-//       return line.replace(/^(position|role|title|job|hiring for|looking for|seeking)[:\s-]*/i, "").trim();
-//     }
-//   }
-//   const titleMatch = jobDescription.match(/(?:position|role|title|hiring|looking for|seeking)[:\s]+([^\n.]{5,60})/i);
-//   if (titleMatch) return titleMatch[1].trim();
-//   return "Software Engineer";
-// }
-
 function extractJobTitle(jobDescription) {
   const lines = jobDescription.split("\n").map(l => l.trim()).filter(Boolean);
 
-  // Step 1: Try structured lines (best case)
-  for (const line of lines.slice(0, 5)) {
-    const match = line.match(/(Full Stack Developer|Backend Developer|Frontend Developer|Software Engineer|MERN Developer|Node\.?js Developer)(\s*\([^)]+\))?/i);
-    if (match) {
-      return match[0].trim();
+  // Build one regex per title, sorted longest-first so "Machine Learning Engineer"
+  // wins over "Engineer" on the same line
+  const sortedTitles = [...JOB_TITLE_TAXONOMY].sort((a, b) => b.length - a.length);
+
+  const titleRegex = (title) => {
+    const escaped = title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`\\b${escaped}\\b`, "i");
+  };
+
+  // ── Priority 1: structured label lines (e.g. "Role: Senior Data Scientist") ─
+  const labelPattern = /^(position|role|title|job title|designation|opening|vacancy)[:\s\-–]+(.+)/i;
+  for (const line of lines.slice(0, 10)) {
+    const labelMatch = line.match(labelPattern);
+    if (labelMatch) {
+      const candidate = labelMatch[2].trim();
+      // Check if any known title lives inside this label value
+      for (const title of sortedTitles) {
+        if (titleRegex(title).test(candidate)) return title;
+      }
+      // No taxonomy match — return the raw label value if it's short enough
+      if (candidate.length < 70) return candidate;
     }
   }
 
-  // Step 2: Extract from sentences (unstructured JDs)
-  const sentenceMatch = jobDescription.match(
-    /(?:looking for|seeking|hiring|need)\s+(?:a|an)?\s*([a-zA-Z\s]+?(Developer|Engineer|Manager|Analyst|Architect))(\s*\([^)]+\))?/i
-  );
-
-  if (sentenceMatch) {
-    let title = sentenceMatch[1] + (sentenceMatch[3] || "");
-    
-    // Clean unwanted words
-    title = title
-      .replace(/\b(passionate|dynamic|experienced|talented|motivated)\b/gi, "")
-      .replace(/\s+/g, " ")
-      .trim();
-
-    return title;
+  // ── Priority 2: short standalone lines (likely a heading / job title line) ──
+  for (const line of lines.slice(0, 8)) {
+    if (line.length > 60) continue; // too long to be a clean title line
+    for (const title of sortedTitles) {
+      if (titleRegex(title).test(line)) return title;
+    }
   }
 
-  return "Software Engineer";
+  // ── Priority 3: full-text scan (unstructured JDs) ─────────────────────────
+  for (const title of sortedTitles) {
+    if (titleRegex(title).test(jobDescription)) return title;
+  }
+
+  // ── Priority 4: intent phrases ("We are looking for a…") ──────────────────
+  const intentMatch = jobDescription.match(
+    /(?:looking for|hiring|seeking|need|require)[sa]?\s+(?:a|an)?\s+([A-Z][a-zA-Z\s\/]{3,50}?)(?:\s+to\b|\s+who\b|\.|\n|,)/i
+  );
+  if (intentMatch) {
+    const raw = intentMatch[1].trim();
+    for (const title of sortedTitles) {
+      if (titleRegex(title).test(raw)) return title;
+    }
+    if (raw.length < 60) return raw;
+  }
+
+  return "Software Engineer"; // safe fallback
 }
 
 // ─── MAIN EXPORTED FUNCTIONS ──────────────────────────────────────────────────
