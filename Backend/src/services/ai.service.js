@@ -20,16 +20,16 @@ const SKILL_TAXONOMY = [
   "jenkins", "nginx", "linux", "cicd ","ci cd" ,"devops", "git", "github", "gitlab",
   "machine learning", "deep learning", "tensorflow", "pytorch", "keras",
   "scikit-learn", "nlp", "computer vision", "llm", "langchain", "openai",
-  "react native", "flutter", "android", "ios",
-  "jest", "mocha", "cypress", "selenium", "pytest", "testing", "tdd",
+  "react native", "flutter", "android", "ios","data science","power bi",
+  "jest", "mocha", "cypress", "selenium", "pytest", "testing", "tdd","transformers",
   "agile", "scrum", "design patterns", "data structures", "algorithms",
-  "system design", "oop", "functional programming", "mvc", "solid",
-  "oauth", "jwt", "authentication", "authorization", "security",
-  "caching", "kafka", "rabbitmq", "performance", "blockchain", "web3",
-  "pandas", "numpy", "matplotlib", "seaborn", "plotly", "jupyter",
-  "r", "xgboost", "lightgbm", "statsmodels", "tableau", "power bi", "looker", "dbt","llamaindex", "hugging face", "transformers", "rag", "prompt engineering",
-  "vector databases", "pinecone", "weaviate", "chromadb", "fine-tuning", "anthropic", "ollama",
-  "spark", "hadoop", "airflow", "snowflake", "databricks",
+  "system design", "oop", "functional programming", "mvc", "solid","rag",
+  "oauth", "jwt", "authentication", "authorization", "security", "prompt engineering",
+  "caching", "kafka", "rabbitmq", "performance", "blockchain", "web3","ollama",
+  "pandas", "numpy", "matplotlib", "seaborn", "plotly", "jupyter","dbt","llamaindex", 
+  "r", "xgboost", "lightgbm", "statsmodels", "tableau", "power bi", "looker",  
+  "vector databases", "pinecone", "weaviate", "chromadb", "fine-tuning", "anthropic",
+  "spark", "hadoop", "airflow", "snowflake", "databricks","statistics",
 ];
 const JOB_TITLE_TAXONOMY = [
 
@@ -89,9 +89,11 @@ const JOB_TITLE_TAXONOMY = [
 // ─── TECHNICAL QUESTION BANK ─────────────────────────────────────────────────
 const TECHNICAL_QUESTION_BANK = {
   react: {
+    
     question: "Can you explain the React component lifecycle and how hooks like useEffect and useState replace class lifecycle methods?",
     intention: "To assess understanding of React's core rendering model and modern hooks-based patterns.",
     answer: "React's class lifecycle methods (componentDidMount, componentDidUpdate, componentWillUnmount) are replaced by useEffect in functional components. useState manages local state while useEffect handles side effects. useEffect with an empty dependency array runs once on mount, with dependencies it runs on updates, and the cleanup function runs on unmount. This simplifies component logic and enables custom hooks for reusable stateful logic."
+    
   },
   nodejs: {
     question: "Explain the Node.js event loop and how it handles asynchronous operations without blocking the main thread.",
@@ -158,7 +160,7 @@ const TECHNICAL_QUESTION_BANK = {
     intention: "To assess understanding of modern authorization standards and when to apply each flow.",
     answer: "Authorization Code flow is for user-facing apps: the user logs in via the provider, receives an auth code, which the backend exchanges for an access token. This keeps tokens off the browser. Client Credentials flow is for machine-to-machine: the client sends its client_id and secret directly to get a token — no user involved. Use PKCE with Authorization Code for SPAs and mobile apps to prevent code interception attacks."
   },
-  system_design: {
+  "system design": {
     question: "How would you design a scalable URL shortener like bit.ly? Walk me through the architecture.",
     intention: "To evaluate system design thinking, ability to handle scale, and understanding of distributed systems trade-offs.",
     answer: "Core components: API servers, a base62 encoder to generate short codes, a database (SQL for reliability or Cassandra for scale) storing short-to-long mappings, and Redis for caching hot URLs. For scale: add a load balancer, use a distributed ID generator (Snowflake), CDN for redirect speed, and rate limiting to prevent abuse. The redirect endpoint (301 vs 302) matters — 301 caches at browser level reducing load but losing analytics; 302 keeps every redirect hitting your server."
@@ -186,19 +188,171 @@ const TECHNICAL_QUESTION_BANK = {
     answer: "Use Spark when data exceeds available RAM (typically 10GB+) or when processing speed matters at scale. Spark distributes data into partitions across a cluster. Operations are lazy — they build a DAG of transformations and only execute on an action like collect() or write(). Use DataFrames over RDDs for performance (Catalyst optimizer). Key concepts: transformations (map, filter, groupBy) vs actions (count, show, write). PySpark lets you use a Pandas-like API. For ML at scale, use Spark MLlib."
   },
 
-  power_bi: {
+  "power bi": {
     question: "How would you design a Power BI dashboard for business stakeholders? Walk through your data modeling and visualization choices.",
     intention: "To assess data analytics communication skills and understanding of BI tool best practices.",
     answer: "Start with the star schema in Power BI's data model: fact tables (sales, transactions) connected to dimension tables (date, product, region). Use DAX measures for KPIs rather than calculated columns to preserve query performance. Design for the audience: executives want high-level KPIs with drill-through, analysts need filters and slicers. Use consistent colors, avoid pie charts for more than 3 segments, and always include a date slicer. Publish to Power BI Service with row-level security if data is sensitive."
+  },
+  // ── Data Science & Analytics ──────────────────────────────────────────────────
+
+  "data science": {
+    question: "Walk me through a complete machine learning project lifecycle — from problem definition to model deployment.",
+    intention: "To assess whether the candidate understands the full DS workflow beyond just model training.",
+    answer: "Start with problem framing: is it classification, regression, or clustering? Then EDA to understand distributions, correlations, and outliers. Feature engineering — encoding categoricals, scaling numerics, handling nulls. Split data into train/val/test sets (never touch test until final evaluation). Train multiple models, tune hyperparameters using cross-validation, and select based on the right metric (F1 for imbalanced classes, RMSE for regression). Evaluate on the holdout test set. Deploy via REST API (FastAPI or Flask), monitor for data drift, and retrain on a schedule."
+  },
+
+  "machine learning": {
+    question: "Explain the bias-variance tradeoff and how you diagnose and fix underfitting vs overfitting in a model.",
+    intention: "To assess core ML theory understanding and practical debugging ability.",
+    answer: "Bias is error from wrong assumptions (underfitting — model too simple). Variance is error from sensitivity to training data (overfitting — model too complex). Diagnose using learning curves: high train error + high val error = underfitting (add complexity, better features); low train error + high val error = overfitting (regularization, dropout, more data, simpler model). Tools: L1/L2 regularization, early stopping, cross-validation, and ensemble methods like bagging reduce variance while boosting reduces bias."
+  },
+
+  "deep learning": {
+    question: "Explain how backpropagation works and what problems like vanishing gradients affect deep networks.",
+    intention: "To assess depth of neural network understanding beyond just using libraries.",
+    answer: "Backpropagation computes gradients of the loss with respect to each weight using the chain rule, propagating error backwards from the output layer. In deep networks, repeated multiplication of small gradients causes the vanishing gradient problem — early layers learn nothing. Solutions: ReLU activations (no saturation for positive values), batch normalization (stabilizes activations), residual connections (skip connections in ResNets), and careful weight initialization (He or Xavier). Exploding gradients are handled with gradient clipping."
+  },
+
+  xgboost: {
+    question: "Why does XGBoost outperform a standard Random Forest in most tabular data competitions, and what hyperparameters matter most?",
+    intention: "To assess practical ML knowledge and ability to tune tree-based models effectively.",
+    answer: "XGBoost uses gradient boosting — trees are built sequentially, each correcting the previous one's errors. Random Forest builds trees in parallel independently. Sequential correction makes XGBoost more accurate on structured/tabular data. Key hyperparameters: n_estimators (number of trees), learning_rate (shrinkage — lower is better with more trees), max_depth (controls overfitting — typically 3-6), subsample and colsample_bytree (row/column sampling — add regularization), and min_child_weight (prevents splits on small samples). Always use early stopping with a validation set to find the optimal n_estimators."
+  },
+
+  "feature engineering": {
+    question: "What feature engineering techniques would you apply to a dataset with high-cardinality categorical variables and skewed numeric distributions?",
+    intention: "To assess practical data preprocessing depth, which directly impacts model performance.",
+    answer: "For high-cardinality categoricals: target encoding (replace category with mean of target — watch for leakage, use cross-val encoding), frequency encoding, or embedding layers in neural nets. Avoid one-hot encoding for 100+ categories. For skewed numerics: log transform or Box-Cox for right skew, winsorize extreme outliers instead of dropping them. For tree-based models, skew matters less — prioritize for linear models and neural nets. Always fit encoders and scalers on training data only, then transform validation/test to prevent leakage."
+  },
+
+  tableau: {
+    question: "How would you design a Tableau dashboard to communicate sales performance to a non-technical executive audience?",
+    intention: "To assess data storytelling ability and understanding of effective data visualization principles.",
+    answer: "Start with a single KPI summary row: total revenue, MoM growth, target vs actual. Use a line chart for trend over time — it's the most intuitive for executives. Add a map for geographic breakdown and a bar chart for top 10 products/regions. Avoid tables with raw numbers — use conditional formatting if needed. Apply a consistent color palette: one accent color for highlights, gray for context. Use tooltips for detail, not labels on every point. Publish to Tableau Server with filters for region/date so executives can self-serve without asking for new reports."
+  },
+
+  // ── AI / LLM Engineering ─────────────────────────────────────────────────────
+
+  llm: {
+    question: "Explain the transformer architecture. What is the role of self-attention and why did it replace RNNs for NLP tasks?",
+    intention: "To assess foundational AI knowledge required for working with modern LLMs and building on top of them.",
+    answer: "Transformers process entire sequences in parallel using self-attention, which computes relationships between every token pair simultaneously. Each token attends to all others with learned weights (Query × Key / √d, softmax, then weighted sum of Values). This captures long-range dependencies that RNNs struggle with due to vanishing gradients over long sequences. Multi-head attention runs several attention mechanisms in parallel, each learning different relationship types. Positional encodings inject sequence order since the architecture has no inherent order. Transformers scale far better than RNNs — the foundation of GPT, BERT, and all modern LLMs."
+  },
+
+  "prompt engineering": {
+    question: "What advanced prompting techniques do you know, and when would you use each in a production LLM application?",
+    intention: "To assess practical LLM application engineering beyond basic API calls.",
+    answer: "Chain-of-thought (CoT): add 'think step by step' for reasoning-heavy tasks — improves accuracy significantly on math and logic. Few-shot: include 2-5 input-output examples in the prompt to steer format and tone. Self-consistency: sample multiple CoT completions and majority-vote the answer — reduces hallucination for factual tasks. ReAct: interleave reasoning and tool-use steps for agent workflows. System prompt engineering: define persona, constraints, and output format explicitly. For production: always version your prompts, evaluate against a test set before deploying, and use structured output (JSON mode or tool calling) to make parsing reliable."
+  },
+
+  "hugging face": {
+    question: "How would you use Hugging Face Transformers to fine-tune a pre-trained BERT model for a custom text classification task?",
+    intention: "To assess ability to apply transfer learning practically using the most widely used ML library in industry.",
+    answer: "Load the pre-trained model and tokenizer: AutoModelForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=N). Tokenize your dataset using the tokenizer with padding and truncation. Create a Trainer with TrainingArguments: set learning_rate (2e-5 to 5e-5), num_train_epochs (3-5), batch size, and evaluation strategy. Use compute_metrics to track F1/accuracy during training. Fine-tune only the classification head first if data is small, then unfreeze all layers. Push to Hub with model.push_to_hub() for versioning. For large models, use PEFT/LoRA to fine-tune efficiently without updating all parameters."
+  },
+
+  "fine-tuning": {
+    question: "What is LoRA fine-tuning and when would you use it over full fine-tuning or prompt engineering alone?",
+    intention: "To assess understanding of efficient LLM adaptation — a critical skill in modern AI engineering.",
+    answer: "LoRA (Low-Rank Adaptation) freezes the original model weights and injects small trainable rank-decomposition matrices into attention layers. Instead of updating billions of parameters, you train only millions — reducing GPU memory by 10x+. Use LoRA when: you need task-specific behavior that prompting cannot achieve (custom tone, domain knowledge, output format), you have a labeled dataset of 500+ examples, and you cannot afford full fine-tuning compute. Prefer prompt engineering first — it requires no training. Use LoRA when prompting plateaus. Full fine-tuning only when you have abundant data and compute, or need to update the model's factual knowledge."
+  },
+
+  "vector databases": {
+    question: "Explain how vector databases work and compare Pinecone, Weaviate, and ChromaDB for a production RAG system.",
+    intention: "To assess practical knowledge of the retrieval layer in LLM application architecture.",
+    answer: "Vector databases store high-dimensional embeddings and enable approximate nearest-neighbor (ANN) search using algorithms like HNSW or IVF. They are the retrieval backbone of RAG. Pinecone: fully managed, production-grade, easiest to scale — best for teams that want zero infra overhead, but costly at scale. Weaviate: open-source, supports hybrid search (vector + BM25 keyword), strong for multi-tenant apps. ChromaDB: open-source, zero setup, ideal for prototyping and local development — not production-grade for high concurrency. For production RAG: use Pinecone or Weaviate. Always benchmark retrieval quality (recall@k) and latency separately from the LLM layer."
+  },
+
+  airflow: {
+    question: "How would you design and schedule a data pipeline using Apache Airflow for a daily ML feature engineering job?",
+    intention: "To assess data engineering and MLOps ability to build reliable, observable production pipelines.",
+    answer: "Define a DAG with a daily schedule_interval. Break the pipeline into tasks: extract (pull raw data from S3 or DB), transform (run Pandas or Spark feature engineering), validate (Great Expectations data quality checks), and load (write features to the feature store or data warehouse). Use the TaskFlow API (@task decorator) for clean Python tasks. Set retries=3 and retry_delay on each task. Use XComs only for small metadata, not large dataframes — store data in S3 between tasks. Monitor via Airflow UI and set email_on_failure alerts. Use Airflow connections/variables for credentials — never hardcode them."
+  },
+
+  snowflake: {
+    question: "What makes Snowflake different from traditional data warehouses, and how would you optimize a slow Snowflake query?",
+    intention: "To assess cloud data warehouse knowledge critical for data engineering and analytics roles.",
+    answer: "Snowflake separates storage (S3) from compute (virtual warehouses), so you scale them independently and pay only for what you use. It auto-suspends idle warehouses. Unlike Redshift or BigQuery, Snowflake uses micro-partitioning — data is automatically clustered, eliminating manual index management. To optimize slow queries: check the Query Profile in the UI for bottlenecks (full table scans, data spills). Add clustering keys on frequently filtered columns. Use result caching (identical queries return instantly). Avoid SELECT * — project only needed columns. Use materialized views for expensive repeated aggregations. Right-size the warehouse — bigger isn't always faster for I/O-bound queries."
+  },
+
+  statistics: {
+    question: "Explain p-values, confidence intervals, and Type I vs Type II errors in the context of an A/B test you ran.",
+    intention: "To assess statistical literacy, which separates strong data scientists from those who just run models.",
+    answer: "P-value: probability of seeing results this extreme if the null hypothesis (no difference) is true. p < 0.05 means we reject the null — not that the effect is large or practically significant. Confidence interval: the range within which the true effect likely falls 95% of the time across repeated experiments — more informative than p-values alone. Type I error (false positive): declaring a winner when there is none — controlled by significance threshold α. Type II error (false negative): missing a real effect — controlled by statistical power (typically 80%). Common A/B pitfalls: peeking at results early (inflates Type I errors), not running the test long enough, and ignoring novelty effects."
+  },
+  javascript: {
+    question: "Explain closures, the event loop, and the difference between var, let, and const in JavaScript.",
+    intention: "To assess core JavaScript fundamentals that underpin all frontend and Node.js work.",
+    answer: "A closure is a function that retains access to its outer scope even after the outer function has returned — used for data encapsulation and factory functions. The event loop processes the call stack first, then microtasks (Promises), then macrotasks (setTimeout). var is function-scoped and hoisted with undefined; let and const are block-scoped and not initialized until declaration (temporal dead zone). const prevents reassignment but not mutation of objects/arrays."
+  },
+
+  mysql: {
+    question: "How does MySQL handle indexing, and what is the difference between a clustered and non-clustered index?",
+    intention: "To assess relational database internals knowledge beyond just writing queries.",
+    answer: "A clustered index determines the physical order of rows on disk — InnoDB uses the primary key as the clustered index, so there can only be one per table. A non-clustered index is a separate structure with pointers back to the row. Lookups on non-clustered indexes require a second read (key lookup) unless it is a covering index containing all queried columns. Use EXPLAIN to check if queries are using indexes. Avoid indexing low-cardinality columns like boolean flags — the optimizer will skip them."
+  },
+
+  security: {
+    question: "Walk me through the OWASP Top 10 vulnerabilities. How would you protect a Node.js REST API from SQL injection, XSS, and CSRF?",
+    intention: "To assess security awareness and ability to build defensively — critical for any backend role.",
+    answer: "SQL injection: use parameterized queries or an ORM — never concatenate user input into queries. XSS: sanitize and escape all output, set Content-Security-Policy headers, use HttpOnly cookies. CSRF: use CSRF tokens for state-changing requests, SameSite cookie attribute, and verify Origin headers. Additional hardening: rate limiting (express-rate-limit), helmet.js for secure HTTP headers, input validation with Joi or Zod, and never expose stack traces in production error responses."
+  },
+
+  kafka: {
+    question: "Explain Apache Kafka's core concepts — topics, partitions, and consumer groups — and when you would use it over a simple message queue like RabbitMQ.",
+    intention: "To assess event-driven architecture knowledge for high-throughput distributed systems.",
+    answer: "Kafka is a distributed log. Producers write to topics, which are split into partitions for parallelism and scalability. Each partition is an ordered, immutable sequence of messages. Consumer groups allow multiple consumers to read from a topic in parallel — each partition is assigned to one consumer in the group. Messages are retained by time or size (not deleted on consume), enabling replay. Use Kafka for high-throughput event streaming, audit logs, and event sourcing. Use RabbitMQ for simpler task queues where delivery guarantees and routing flexibility matter more than scale."
+  },
+
+  tensorflow: {
+    question: "How would you build and train a neural network using TensorFlow/Keras for a multi-class classification problem?",
+    intention: "To assess practical deep learning implementation ability using the most widely used DL framework.",
+    answer: "Define a Sequential model: Input layer → Dense layers with ReLU → Dropout for regularization → final Dense layer with softmax activation (num_classes units). Compile with optimizer (Adam), loss (categorical_crossentropy for one-hot labels or sparse_categorical_crossentropy for integer labels), and metrics (['accuracy']). Use model.fit() with validation_data, EarlyStopping callback (monitor val_loss, patience=3), and ModelCheckpoint to save the best weights. For large datasets use tf.data pipelines for efficient batching and prefetching. Evaluate on the test set only after final model selection."
+  },
+
+  pytorch: {
+    question: "What is the difference between PyTorch's dynamic computation graph and TensorFlow's static graph, and why does it matter for debugging?",
+    intention: "To assess understanding of deep learning framework internals and their practical implications.",
+    answer: "PyTorch builds the computation graph dynamically at runtime — each forward pass creates a new graph. This means you can use regular Python control flow (if/for), print intermediate tensors, and debug with standard Python tools like pdb. TensorFlow 1.x used static graphs (define-then-run) which were faster to optimize but difficult to debug. TF2 adopted eager execution by default, closing the gap. PyTorch's dynamic graph is preferred for research and complex architectures (RNNs with variable-length inputs, meta-learning). TF2 with tf.function gives the best of both: eager by default, compiled when needed."
+  },
+
+  "scikit-learn": {
+    question: "How do you build a robust ML pipeline in scikit-learn that prevents data leakage and works correctly at inference time?",
+    intention: "To assess practical ML engineering discipline — leakage is one of the most common and costly mistakes in production ML.",
+    answer: "Use sklearn Pipeline to chain preprocessors and the model: Pipeline([('scaler', StandardScaler()), ('classifier', LogisticRegression())]). The pipeline ensures fit() is called only on training data and transform() is applied consistently to validation and test sets. For cross-validation, wrap everything in cross_val_score — it fits and transforms each fold independently, preventing leakage. For categorical encoding, use ColumnTransformer to apply different transformations to different feature types. Save the entire pipeline with joblib.dump() for inference — this ensures the same preprocessing is always applied."
+  },
+
+  nlp: {
+    question: "Explain the difference between stemming, lemmatization, TF-IDF, and word embeddings — when would you use each?",
+    intention: "To assess foundational NLP knowledge and understanding of text representation trade-offs.",
+    answer: "Stemming crudely chops word endings (running → run) — fast but produces non-words. Lemmatization uses vocabulary and morphology to return the base form (better → good) — slower but accurate. TF-IDF represents text as sparse vectors weighted by term frequency and inverse document frequency — good for keyword-based search and classical ML models. Word embeddings (Word2Vec, GloVe, FastText) represent words as dense vectors that capture semantic meaning — similar words are close in vector space. For modern NLP tasks, use transformer-based contextual embeddings (BERT, sentence-transformers) which produce different vectors for the same word depending on context."
+  },
+
+  "computer vision": {
+    question: "How does a Convolutional Neural Network (CNN) process images, and what techniques do you use to prevent overfitting on small image datasets?",
+    intention: "To assess deep learning knowledge applied to vision tasks — a core requirement for computer vision roles.",
+    answer: "CNNs apply learned filters (kernels) across the image to detect local patterns — edges in early layers, complex shapes in deeper layers. Convolution → ReLU → Pooling blocks progressively reduce spatial dimensions while increasing feature depth. For small datasets: data augmentation (random flip, rotation, color jitter) artificially increases training diversity. Transfer learning is the most powerful technique — take a pretrained model (ResNet, EfficientNet), freeze early layers, and fine-tune the final layers on your dataset. Dropout and batch normalization also reduce overfitting. Always use ImageDataGenerator or torchvision.transforms in your data pipeline."
+  },
+
+  langchain: {
+    question: "How would you use LangChain to build a multi-step AI agent that can use tools like web search and a calculator?",
+    intention: "To assess practical LLM orchestration ability — building agents is a core skill in modern AI engineering.",
+    answer: "Define tools as functions decorated with @tool or wrapped with Tool(). Create an agent using initialize_agent() or the newer AgentExecutor with a prompt template that includes tool descriptions. The agent follows a ReAct loop: Thought → Action (pick a tool) → Observation (tool result) → repeat until it has enough information to give a Final Answer. Use ConversationBufferMemory to maintain context across turns. For production: add output parsers to handle malformed responses, set max_iterations to prevent infinite loops, and use streaming callbacks to show the agent's reasoning steps to the user in real time."
+  },
+  lightgbm: {
+    question: "How does LightGBM differ from XGBoost in its tree-building strategy, and when would you prefer one over the other?",
+    intention: "To assess depth of gradient boosting knowledge and ability to make informed model selection decisions.",
+    answer: "XGBoost grows trees level-by-level (depth-wise), splitting all nodes at a given depth before going deeper. LightGBM grows trees leaf-wise — it always splits the leaf with the highest loss reduction, producing asymmetric trees that converge faster. LightGBM is significantly faster and uses less memory on large datasets due to histogram-based splitting and feature bundling. Prefer LightGBM for large datasets (100k+ rows) where training speed matters. Prefer XGBoost when interpretability and stability on smaller datasets is priority, or when LightGBM overfits due to aggressive leaf-wise growth — control this with min_data_in_leaf and num_leaves."
   },
   default: {
     question: "Describe a technically challenging problem you solved recently. What was your approach and what did you learn?",
     intention: "To assess problem-solving ability, depth of technical thinking, and self-awareness.",
     answer: "Structure your answer using STAR: Situation (context of the problem), Task (what you needed to achieve), Action (specific technical steps you took — be detailed here), Result (measurable outcome). Focus on your decision-making process, trade-offs you considered, and what you would do differently with hindsight."
-  }
+  },
+
 };
 
-// ─── BEHAVIORAL QUESTION BANK ─────────────────────────────────────────────────
+// ─── BEHAVIORAL QUESTION BANK ───────────────────────────────────────────────
 const BEHAVIORAL_QUESTION_BANK = [
   {
     question: "Tell me about a time you had to learn a new technology quickly under a tight deadline. How did you approach it?",
@@ -206,19 +360,44 @@ const BEHAVIORAL_QUESTION_BANK = [
     answer: "Use the STAR method. Highlight: how you broke down the learning into manageable chunks, what resources you used (docs, tutorials, colleagues), how you built a minimal proof-of-concept first, and how you managed stakeholder expectations around the timeline. Emphasize what the outcome was and what you would do differently."
   },
   {
-    question: "Describe a situation where you disagreed with a technical decision made by your team or manager. What did you do?",
-    intention: "To evaluate communication skills, professional maturity, and ability to advocate for technical quality diplomatically.",
-    answer: "Show that you raised the concern constructively — with data and alternatives, not just objections. Explain how you presented your perspective (written proposal, prototype, benchmarks), how you listened to the other side's rationale, and how you ultimately committed to the team's decision even if it was not yours. Disagreeing and committing is a valued engineering trait."
+    question: "Tell me about a challenging project you worked on during college or an internship. What was your role and what did you learn?",
+    intention: "To assess initiative, learning ability, and how they handle real work outside the classroom.",
+    answer: "Use STAR. Describe the project context, your specific contribution (not just the team's), a challenge you personally faced, and what you did to overcome it. Focus on what you learned — technical skills, teamwork, communication. Avoid vague answers like 'it was a group project and we all contributed equally' — interviewers want to know what YOU did specifically."
   },
   {
-    question: "Tell me about a time you had to work with a difficult teammate or stakeholder. How did you handle it?",
-    intention: "To assess emotional intelligence, conflict resolution skills, and ability to maintain productive working relationships.",
-    answer: "Focus on the actions you took, not on criticizing the other person. Describe how you sought to understand their perspective, how you communicated your own needs clearly, and what specific steps you took to find common ground. Emphasize the professional outcome and what you learned about working with different personalities."
+    question: "Describe a time you had to learn something completely new in a short amount of time. How did you go about it?",
+    intention: "To assess learning agility — the most critical trait for freshers since most will need to learn on the job from day one.",
+    answer: "Pick a specific example: a new language, framework, or tool you picked up for a project or hackathon. Explain your learning strategy — official docs, tutorials, building a small project, asking for help. Show that you are systematic, not random. Emphasize what you built or achieved with the new skill, even if small. This reassures interviewers that you can ramp up quickly."
   },
   {
-    question: "Give an example of a project where you took ownership beyond your assigned responsibilities. What drove you to do that?",
-    intention: "To assess initiative, ownership mindset, and intrinsic motivation beyond just completing tasks.",
-    answer: "Describe a specific instance where you noticed a gap — a missing test suite, a performance issue, an unclear process — and took it upon yourself to address it. Explain your motivation (quality, team efficiency, user impact), what you actually did, and the measurable outcome. Show that you think in terms of outcomes, not just outputs."
+    question: "Have you ever worked in a team where there was a disagreement? How did you handle it?",
+    intention: "To assess conflict resolution and communication skills in a team setting — relevant even from college projects.",
+    answer: "This can be from a college group project, hackathon team, or internship. Show that you listened to others' perspectives before asserting your own. Describe how you found common ground — a compromise, a vote, or deferring to someone with more context. The key is to show maturity: you did not go silent, did not dominate, and the team moved forward constructively."
+  },
+  {
+    question: "Tell me about a personal project or side project you built. Why did you build it and what did you learn from it?",
+    intention: "To assess genuine passion for the craft and ability to self-direct learning beyond coursework.",
+    answer: "Describe a specific project — what problem it solved, why you chose the tech stack, what was the hardest part, and what you would do differently now. Even small or incomplete projects are fine — the interviewer wants to see curiosity and initiative, not a production-ready product. If you deployed it or got any users, mention that. If it is on GitHub, mention that too."
+  },
+  {
+    question: "Why did you choose this field, and where do you see yourself in the next 2-3 years?",
+    intention: "To assess motivation, self-awareness, and whether their growth goals align with the role.",
+    answer: "Be honest and specific — not 'I like computers' but 'I got into backend development because I was fascinated by how APIs work after building X project.' For the future, show ambition without arrogance: you want to become a solid contributor, build real production systems, and grow into a senior engineer over time. Align your answer to the company's domain if possible."
+  },
+  {
+    question: "Tell me about a time you received feedback on your work — from a professor, mentor, or internship supervisor. How did you respond?",
+    intention: "To assess receptiveness to feedback — a key indicator of how quickly a fresher will grow on the job.",
+    answer: "Choose an example where the feedback stung a little but was valid. Show that you did not get defensive — you asked clarifying questions, thanked them, and took concrete action. Describe the change you made and whether the outcome improved. Interviewers are not looking for someone who never makes mistakes — they want someone who improves when corrected."
+  },
+  {
+    question: "Describe a situation where you had to meet a deadline with incomplete knowledge or resources. What did you do?",
+    intention: "To assess resourcefulness and ability to deliver under constraints — a realistic preview of professional life.",
+    answer: "This could be a college submission, hackathon, or internship task. Show that you triaged — identified what was essential vs nice-to-have, asked for help early rather than at the last minute, and communicated proactively if the timeline was at risk. Emphasize what you delivered and what you would do differently with more time."
+  },
+  {
+    question: "Have you ever taken initiative to do something beyond what was asked of you in a project or internship? What drove you to do it?",
+    intention: "To identify candidates who go beyond minimum requirements — a strong predictor of high performance.",
+    answer: "Even small examples count: adding tests that were not required, writing documentation, suggesting a better approach, or fixing a bug you noticed while working on something else. Explain what motivated you — quality, user impact, team efficiency — not just 'I had free time.' Show that thinking beyond your immediate task is a habit, not a one-time event."
   },
   {
     question: "Describe how you prioritize tasks when you have multiple deadlines competing for your attention.",
@@ -229,7 +408,28 @@ const BEHAVIORAL_QUESTION_BANK = [
     question: "Tell me about a time you received critical feedback on your work. How did you respond?",
     intention: "To assess self-awareness, receptiveness to feedback, and ability to grow from criticism.",
     answer: "Choose an example where the feedback was genuinely difficult but valid. Show that you listened without becoming defensive, asked clarifying questions to fully understand the concern, and took concrete action to address it. Highlight the growth that resulted — a changed habit, an improved skill, or a better outcome on the next project."
-  }
+  }, 
+  {
+    question: "Describe a project or decision that failed. What went wrong and what did you learn from it?",
+    intention: "To assess self-awareness, honesty, and ability to extract lessons from failure rather than deflect blame.",
+    answer: "Choose a real failure — interviewers can tell when candidates dodge this. Be specific about what went wrong and own your part in it without over-explaining or blaming others. Then clearly articulate what you changed as a result: a process you adopted, an assumption you now always validate, or a communication habit you built. The best answers show that the failure made you meaningfully better — not just that you felt bad about it."
+  },
+  {
+    question: "Describe a situation where you identified a process or workflow inefficiency in your team. What did you do about it?",
+    intention: "To assess proactiveness, systems thinking, and ability to drive improvement beyond your immediate scope.",
+    answer: "Pick a specific inefficiency — a manual deployment step, a slow code review process, a recurring bug type with no prevention mechanism. Describe how you noticed it (metrics, repeated friction, colleague complaints) and what you did: proposed a solution, built a proof of concept, documented it, or got buy-in from the team. Quantify the improvement where possible — time saved, error rate reduced, deployment frequency increased. This shows you treat your team's productivity as part of your job, not just your own output."
+  },
+  {
+    question: "Tell me about a time you had to work with a difficult teammate or stakeholder. How did you handle it?",
+    intention: "To assess emotional intelligence, conflict resolution skills, and ability to maintain productive working relationships.",
+    answer: "Focus on the actions you took, not on criticizing the other person. Describe how you sought to understand their perspective, how you communicated your own needs clearly, and what specific steps you took to find common ground. Emphasize the professional outcome and what you learned about working with different personalities."
+  },
+  {
+    question: "Describe how you prioritize tasks when you have multiple deadlines competing for your attention.",
+    intention: "To evaluate time management, prioritization frameworks, and communication around capacity.",
+    answer: "Explain your prioritization framework — impact vs effort matrix, MoSCoW method, or aligning with business priorities. Show that you communicate proactively when timelines are at risk rather than going silent. Describe how you break large tasks into smaller deliverables to show progress, and how you negotiate scope when needed."
+  },
+
 ];
 
 // ─── UTILITY FUNCTIONS ────────────────────────────────────────────────────────
@@ -320,6 +520,7 @@ function identifySkillGaps(resumeText, selfDescription, jobDescription) {
   return gaps.slice(0, 6);
 }
 
+
 function selectTechnicalQuestions(resumeText, selfDescription, jobDescription) {
   const candidateText = `${resumeText} ${selfDescription}`;
   const jdSkills = extractSkills(jobDescription);
@@ -351,15 +552,15 @@ function selectTechnicalQuestions(resumeText, selfDescription, jobDescription) {
   if (selected.length < 5) {
     const jdLower = jobDescription.toLowerCase();
     if (jdLower.includes("scale") || jdLower.includes("architect") || jdLower.includes("design")) {
-      if (!usedSkills.has("system_design")) {
-        selected.push(TECHNICAL_QUESTION_BANK["system_design"]);
-        usedSkills.add("system_design");
+      if (!usedSkills.has("system design")) {
+        selected.push(TECHNICAL_QUESTION_BANK["system design"]);
+        usedSkills.add("system design");
       }
     }
   }
 
   // Priority 4: Fill remaining slots with other bank questions
-  const fillerKeys = ["system_design", "agile", "default"];
+  const fillerKeys = ["system design", "agile", "default"];
   for (const key of fillerKeys) {
     if (selected.length >= 5) break;
     if (!usedSkills.has(key) && TECHNICAL_QUESTION_BANK[key]) {
@@ -511,6 +712,162 @@ function buildPreparationPlan(skillGaps, resumeText, selfDescription, jobDescrip
       "Write 5 core DAX measures: total sales, YoY growth, running total, rank, and moving average.",
       "Design a 3-page dashboard: executive summary, regional breakdown, and trend analysis.",
       "Publish to Power BI Service and configure row-level security."
+    ],
+    machine_learning: [
+      "Study the end-to-end ML workflow: EDA, feature engineering, model selection, evaluation.",
+      "Practice the bias-variance tradeoff — plot learning curves for an overfit and underfit model.",
+      "Implement cross-validation and hyperparameter tuning using GridSearchCV or Optuna.",
+      "Build a complete classification pipeline with scikit-learn including preprocessing and evaluation."
+    ],
+    deep_learning: [
+      "Review neural network fundamentals: forward pass, backpropagation, and activation functions.",
+      "Build a simple image classifier using PyTorch or TensorFlow on the MNIST dataset.",
+      "Study common architectures: CNNs for vision, LSTMs for sequences, Transformers for NLP.",
+      "Practice using pretrained models from Hugging Face for a text classification task."
+    ],
+    data_science: [
+      "Pick a Kaggle dataset and complete a full EDA: distributions, correlations, and outliers.",
+      "Practice feature engineering: encoding, scaling, handling nulls, and creating new features.",
+      "Train and compare at least 3 models on the same dataset and justify your final choice.",
+      "Write up your findings as if presenting to a non-technical stakeholder."
+    ],
+    xgboost: [
+      "Train an XGBoost model on a tabular dataset and tune it using early stopping.",
+      "Study the key hyperparameters: learning_rate, max_depth, subsample, and colsample_bytree.",
+      "Compare XGBoost vs LightGBM vs Random Forest on the same dataset and benchmark performance.",
+      "Use SHAP values to explain your XGBoost model's predictions."
+    ],
+    feature_engineering: [
+      "Practice target encoding and frequency encoding for high-cardinality categorical columns.",
+      "Apply log transform and Box-Cox to skewed numeric features and measure the impact.",
+      "Build a scikit-learn Pipeline that chains preprocessing and model training together.",
+      "Study feature selection methods: correlation filter, mutual information, and RFE."
+    ],
+    hugging_face: [
+      "Load a pre-trained BERT model and tokenizer using the Transformers library.",
+      "Fine-tune a sequence classification model on a small custom dataset using the Trainer API.",
+      "Explore the Hugging Face Hub — find and run inference on 3 different model types.",
+      "Study PEFT and LoRA using the peft library for efficient fine-tuning."
+    ],
+    fine_tuning: [
+      "Understand LoRA: what rank decomposition means and which layers to target.",
+      "Fine-tune a small open-source LLM (Mistral or LLaMA) using QLoRA on a free GPU.",
+      "Prepare a training dataset in the instruction-following format (prompt + completion pairs).",
+      "Evaluate your fine-tuned model against the base model using a held-out test set."
+    ],
+    vector_databases: [
+      "Set up ChromaDB locally and store embeddings from a sample document collection.",
+      "Compare cosine similarity vs dot product vs Euclidean distance for retrieval quality.",
+      "Index 10,000+ documents in Pinecone and benchmark query latency at different top-k values.",
+      "Implement a hybrid search combining vector similarity and BM25 keyword scoring."
+    ],
+    prompt_engineering: [
+      "Practice chain-of-thought prompting on 5 reasoning problems and measure accuracy improvement.",
+      "Build a few-shot prompt for a classification task with 3 input-output examples.",
+      "Implement a ReAct-style agent prompt that interleaves reasoning and tool-use steps.",
+      "Version and evaluate 3 prompt variants on a fixed test set using a scoring rubric."
+    ],
+    llm: [
+      "Study the transformer architecture: self-attention, multi-head attention, and positional encoding.",
+      "Run inference locally using Ollama with a quantized LLaMA or Mistral model.",
+      "Build a simple LLM-powered chatbot with conversation history using the OpenAI API.",
+      "Study LLM evaluation metrics: BLEU, ROUGE, BERTScore, and human preference scoring."
+    ],
+    airflow: [
+      "Install Airflow locally and build a DAG with at least 4 dependent tasks.",
+      "Implement retries, SLA alerts, and email_on_failure on each task.",
+      "Pass data between tasks using XComs for small metadata and S3 for large payloads.",
+      "Study Airflow's TaskFlow API and rewrite a classic operator-based DAG using @task decorators."
+    ],
+    snowflake: [
+      "Set up a free Snowflake trial and load a CSV dataset into a table.",
+      "Write 5 queries using Snowflake-specific features: CTEs, window functions, and FLATTEN for JSON.",
+      "Study virtual warehouse sizing and when to scale up vs scale out.",
+      "Use the Query Profile to identify a bottleneck in a slow query and fix it."
+    ],
+    statistics: [
+      "Review hypothesis testing: t-test, chi-square, and ANOVA with Python examples.",
+      "Design a proper A/B test: calculate required sample size, set α and power before running it.",
+      "Study common statistical pitfalls: p-hacking, survivorship bias, and Simpson's paradox.",
+      "Practice interpreting confidence intervals and explain them to a non-technical audience."
+    ],
+    tableau: [
+      "Build a 3-view Tableau dashboard: KPI summary, trend line, and geographic map.",
+      "Connect Tableau to a live database and create a calculated field using a custom formula.",
+      "Study Tableau LOD expressions: FIXED, INCLUDE, and EXCLUDE with practical examples.",
+      "Publish a dashboard to Tableau Public and configure filters and parameter controls."
+    ],
+    javascript: [
+      "Review closures, prototypal inheritance, and the event loop with practical examples.",
+      "Practice async patterns: callbacks vs Promises vs async/await and error handling in each.",
+      "Study ES6+ features: destructuring, spread, optional chaining, and nullish coalescing.",
+      "Build a small vanilla JS project without any framework to solidify DOM manipulation skills."
+    ],
+    typescript: [
+      "Review advanced TypeScript types: generics, conditional types, and mapped types.",
+      "Practice converting a JavaScript module to strict TypeScript.",
+      "Study utility types: Partial, Required, Pick, Omit, and Record.",
+      "Learn how to configure tsconfig.json for different project needs."
+    ],
+    kafka: [
+      "Set up a local Kafka instance using Docker and produce/consume messages with a Node.js client.",
+      "Study partitioning strategy: how to choose partition keys to avoid hot partitions.",
+      "Implement a consumer group with two consumers and observe partition assignment.",
+      "Compare Kafka vs RabbitMQ trade-offs and document when you would choose each."
+    ],
+    agile: [
+      "Review core Scrum ceremonies: sprint planning, daily standup, review, and retrospective.",
+      "Practice explaining technical debt to a non-technical stakeholder using a business impact framing.",
+      "Study the Strangler Fig pattern for incrementally replacing legacy systems.",
+      "Write a short document on how you would balance tech debt and feature delivery in a 2-week sprint."
+    ],
+    security: [
+      "Study OWASP Top 10 and implement fixes for injection and XSS in a sample Express app.",
+      "Add helmet.js, rate limiting, and input validation (Joi/Zod) to a Node.js API.",
+      "Practice setting secure cookie attributes: HttpOnly, Secure, and SameSite.",
+      "Review CORS configuration and understand when and why to restrict origins."
+    ],
+    tensorflow: [
+      "Build a multi-class classifier using Keras Sequential API on a standard dataset (MNIST or CIFAR-10).",
+      "Add EarlyStopping and ModelCheckpoint callbacks to your training loop.",
+      "Build a tf.data pipeline with batching, shuffling, and prefetching.",
+      "Convert your trained Keras model to TensorFlow Lite for mobile deployment."
+    ],
+    pytorch: [
+      "Build a custom Dataset and DataLoader for a tabular or image dataset.",
+      "Implement a training loop from scratch: forward pass, loss, backward, optimizer step.",
+      "Study autograd: how PyTorch tracks gradients and when to use torch.no_grad().",
+      "Fine-tune a pretrained torchvision model (ResNet18) on a custom image dataset."
+    ],
+    "scikit-learn": [
+      "Build a full sklearn Pipeline with ColumnTransformer for mixed feature types.",
+      "Run cross_val_score and compare 3 models: Logistic Regression, Random Forest, and XGBoost.",
+      "Use GridSearchCV or RandomizedSearchCV for hyperparameter tuning.",
+      "Save your trained pipeline with joblib and load it for inference in a separate script."
+    ],
+    nlp: [
+      "Preprocess a text dataset: tokenize, remove stopwords, lemmatize using spaCy.",
+      "Build a TF-IDF vectorizer and train a Logistic Regression text classifier.",
+      "Use sentence-transformers to embed documents and find semantic similarity.",
+      "Fine-tune a DistilBERT model for sentiment analysis using the Hugging Face Trainer."
+    ],
+    "computer vision": [
+      "Load and augment an image dataset using torchvision.transforms or Albumentations.",
+      "Fine-tune a pretrained ResNet or EfficientNet model on a custom image classification task.",
+      "Implement object detection inference using a pretrained YOLO model.",
+      "Study evaluation metrics for vision tasks: accuracy, mAP, IoU, and confusion matrix."
+    ],
+    langchain: [
+      "Build a simple LangChain chain: prompt template → LLM → output parser.",
+      "Add memory to a chatbot using ConversationBufferMemory and test multi-turn dialogue.",
+      "Create a tool-using agent with at least 2 tools (search + calculator) using AgentExecutor.",
+      "Build a RAG chain using LangChain's document loaders, text splitter, and retriever."
+    ],
+    lightgbm: [
+      "Train a LightGBM model and compare speed and accuracy against XGBoost on the same dataset.",
+      "Tune num_leaves, min_data_in_leaf, and learning_rate to control overfitting.",
+      "Use LightGBM's built-in feature importance and compare with SHAP values.",
+      "Implement early stopping with a validation set to find the optimal number of estimators."
     ],
     default_prep: [
       "Review fundamentals and core concepts listed in the job description.",
