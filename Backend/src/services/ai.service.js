@@ -37,7 +37,7 @@ const JOB_TITLE_TAXONOMY = [
   "Full Stack Developer","Full Stack Engineer","Backend Developer","Backend Engineer",
   "Frontend Developer","Frontend Engineer","Software Engineer","Software Developer",
   "Junior Software Engineer","Senior Software Engineer","Staff Software Engineer",
-  "Principal Software Engineer","Associate Software Engineer",
+  "Principal Software Engineer","Associate Software Engineer","Software Development Engineer","SDE",
 
   // ── Specialised Engineering ────────────────────────────────────────────────
   "MERN Stack Developer","MEAN Stack Developer","Node.js Developer","React Developer",
@@ -52,13 +52,12 @@ const JOB_TITLE_TAXONOMY = [
   "Data Analyst","Junior Data Analyst","Senior Data Analyst","Business Analyst",
   "Business Intelligence Analyst","BI Developer","BI Engineer","Analytics Engineer",
   "Quantitative Analyst","Research Scientist","Applied Scientist","Decision Scientist",
-  "Marketing Analyst","Product Analyst","Growth Analyst","Financial Analyst",
+  "Marketing Analyst","Product Analyst","Growth Analyst","Financial Analyst","Data Science Fresher","Data Analyst Fresher",
 
   // ── AI / ML Engineering ───────────────────────────────────────────────────
-  "AI Engineer","ML Engineer","Machine Learning Engineer","Deep Learning Engineer",
+  "AI Engineer","ML Engineer","Machine Learning Engineer","Deep Learning Engineer","Machine Learning Fresher",
   "NLP Engineer","Computer Vision Engineer","AI Research Engineer","Applied ML Engineer",
-  "Generative AI Engineer","LLM Engineer","AI/ML Engineer","Conversational AI Engineer",
-
+  "Generative AI Engineer","LLM Engineer","AI/ML Engineer","Conversational AI Engineer","ML Engineer Fresher","AI Engineer Fresher",
   // ── Data Engineering ──────────────────────────────────────────────────────
   "Data Engineer","Senior Data Engineer","Big Data Engineer","ETL Developer",
   "Analytics Engineer","Data Platform Engineer","Data Infrastructure Engineer","Data Architect",
@@ -435,7 +434,7 @@ const BEHAVIORAL_QUESTION_BANK = [
 // ─── UTILITY FUNCTIONS ────────────────────────────────────────────────────────
 
 function normalizeText(text) {
-  return text.toLowerCase().replace(/[^a-z0-9\s+#]/g, " ").replace(/\s+/g, " ").trim();
+  return text.toLowerCase().replace(/[^a-z0-9\s+#\-\.]/g, " ").replace(/\s+/g, " ").trim();
 }
 
 function extractTokens(text) {
@@ -447,9 +446,14 @@ function extractTokens(text) {
 function extractSkills(text) {
   const normalizedText = normalizeText(text);
   const foundSkills = new Set();
+
   // Special case: CI/CD appears in many formats
   if (/\bci[\s/\-]?cd\b/i.test(normalizedText)) foundSkills.add("cicd");
   if (/\bnext\.?js\b/i.test(normalizedText)) foundSkills.add("nextjs");
+  if (/scikit[\s\-]learn/i.test(normalizedText)) foundSkills.add("scikit-learn"); // ← add this
+  if (/\bml\b/i.test(normalizedText)) foundSkills.add("machine learning");         // ← add this
+  if (/\bai\b/i.test(normalizedText)) foundSkills.add("deep learning");  
+
   for (const skill of SKILL_TAXONOMY) {
     const escaped = skill.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(`\\b${escaped}\\b`, "i");
@@ -517,7 +521,7 @@ function identifySkillGaps(resumeText, selfDescription, jobDescription) {
 
   const severityOrder = { high: 0, medium: 1, low: 2 };
   gaps.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
-  return gaps.slice(0, 6);
+  return gaps;
 }
 
 
@@ -582,12 +586,18 @@ function buildPreparationPlan(skillGaps, resumeText, selfDescription, jobDescrip
   const jdSkills = [...extractSkills(jobDescription)];
   const candidateSkills = extractSkills(`${resumeText} ${selfDescription}`);
 
-  const focusSkills = [
-    ...skillGaps.map(g => g.skill.toLowerCase()),
-    ...jdSkills.filter(s => candidateSkills.has(s)).slice(0, 2)
-  ].slice(0, 4);
+  const gapSkills = skillGaps.map(g => g.skill.toLowerCase());
+  const confirmedSkills = jdSkills
+    .filter(s => candidateSkills.has(s))
+    .filter(s => !gapSkills.includes(s));
+  const focusSkills = [...new Set([...gapSkills, ...confirmedSkills])];
 
-  const fallbackTopics = ["System Design & Architecture", "DSA Practice", "Behavioral Interview Preparation", "Code Review & Best Practices"];
+  const fallbackTopics = [
+    "system design & architecture",
+    "dsa practice",
+    "behavioral interview preparation",
+    "code review & best practices"
+  ];
   while (focusSkills.length < 2) {
     focusSkills.push(fallbackTopics[focusSkills.length]);
   }
@@ -940,15 +950,24 @@ function extractJobTitle(jobDescription) {
   }
 
   // ── Priority 4: intent phrases ("We are looking for a…") ──────────────────
-  const intentMatch = jobDescription.match(
-    /(?:looking for|hiring|seeking|need|require)[sa]?\s+(?:a|an)?\s+([A-Z][a-zA-Z\s\/]{3,50}?)(?:\s+to\b|\s+who\b|\.|\n|,)/i
-  );
-  if (intentMatch) {
-    const raw = intentMatch[1].trim();
-    for (const title of sortedTitles) {
-      if (titleRegex(title).test(raw)) return title;
+  const intentPatterns = [
+    /(?:looking for|hiring|seeking|need|require)[sa]?\s+(?:a|an)?\s+(?:passionate|detail-oriented|experienced|talented|motivated|skilled)?\s*([A-Za-z][a-zA-Z\s\/]{3,50}?)(?:\s+to\b|\s+who\b|\s+with\b|\.|\n|,)/i,
+    /(?:position|role|opening)\s+(?:is|:)?\s*(?:for\s+)?([A-Za-z][a-zA-Z\s\/]{3,50}?)(?:\s+to\b|\s+who\b|\.|\n|,)/i,
+    /(?:join us as|join our team as|hired as)\s+(?:a|an)?\s+([A-Za-z][a-zA-Z\s\/]{3,50}?)(?:\s+to\b|\s+who\b|\.|\n|,)/i,
+  ];
+
+  for (const pattern of intentPatterns) {
+    const match = jobDescription.match(pattern);
+    if (match) {
+      const raw = match[1].trim()
+        .replace(/\b(passionate|detail-oriented|experienced|talented|motivated|skilled)\b/gi, "")
+        .replace(/\s+/g, " ")
+        .trim();
+      for (const title of sortedTitles) {
+        if (titleRegex(title).test(raw)) return title;
+      }
+      if (raw.length > 3 && raw.length < 60) return raw;
     }
-    if (raw.length < 60) return raw;
   }
 
   return "Software Engineer"; // safe fallback
