@@ -2,6 +2,7 @@
 
 A full-stack MERN+NLP application that analyzes a candidate’s resume against a job description and delivers actionable insights like match score, skill gaps, interview questions, and an ATS-friendly resume.
 
+Live : https://resume-analyzer-nu-eight.vercel.app/
 ---
 
 ## ✨ Features
