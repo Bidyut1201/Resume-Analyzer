@@ -13,6 +13,7 @@ const Home = () => {
     const [ selfDescription, setSelfDescription ] = useState("")
     const resumeInputRef = useRef()
     const [resumeFileName, setResumeFileName] = useState("")
+    const [generating, setGenerating] = useState(false)
 
     const navigate = useNavigate()
 
@@ -30,10 +31,12 @@ const Home = () => {
         }
 
         try {
+            setGenerating(true)
             const data = await generateReport({ jobDescription, selfDescription, resumeFile })
             navigate(`/interview/${data._id}`)
         } catch (err) {
             toast.error("Failed to generate report")
+            setGenerating(false)
         }
     }
 
@@ -45,6 +48,15 @@ const Home = () => {
         } catch {
             toast.error("Logout failed")
         }
+    }
+
+
+    if (generating) {
+        return (
+            <main className='loading-screen'>
+                <h1>Analyzing your resume… please wait ⏳</h1>
+            </main>
+        )
     }
 
     return (

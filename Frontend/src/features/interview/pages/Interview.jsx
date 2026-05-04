@@ -69,13 +69,6 @@ const Interview = () => {
     }, [ interviewId ])
 
 
-    if (loading) {
-        return (
-            <main className='loading-screen'>
-                <h1>Analyzing your resume… please wait ⏳</h1>
-            </main>
-        )
-    }
     if (!report) {
         return null; 
     }
