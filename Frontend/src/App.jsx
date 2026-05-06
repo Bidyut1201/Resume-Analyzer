@@ -12,7 +12,7 @@ function App() {
       <InterviewProvider>
         <RouterProvider router={router} />
         <Toaster 
-          position="top-right"
+          position="top-center"
           reverseOrder={false}
         />
       </InterviewProvider>
