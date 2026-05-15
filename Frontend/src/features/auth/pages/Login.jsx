@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router'
 import "../auth.form.scss"
 import { useAuth } from '../hooks/useAuth'
+import toast from 'react-hot-toast'
 
 const Login = () => {
 
-    const { loading, handleLogin } = useAuth()
-    const navigate = useNavigate()
-
-     const { user } = useAuth()  
+    const { loading, handleLogin, user } = useAuth()
+    const navigate = useNavigate()  
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -21,8 +20,13 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await handleLogin({ email, password })
-        navigate('/home',{replace: true})
+        try {
+            await handleLogin({ email, password })
+            // toast.success("Welcome back!")
+            navigate('/home', { replace: true })
+        } catch(err) {
+            toast.error(err || "Invalid email or password")
+        }
     }
 
     if (loading) {

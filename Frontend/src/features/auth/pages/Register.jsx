@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
 import "../auth.form.scss"
+import toast from 'react-hot-toast'
 
 const Register = () => {
 
     const navigate = useNavigate()
-    const { user} = useAuth()
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
     const { loading, handleRegister } = useAuth()
     
-    useEffect(() => {
-        if (!loading && user) {
-            navigate('/home', { replace: true })
-        }
-    }, [user, loading])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await handleRegister({ username, email, password })
-        navigate("/login", {replace: true})
+        try {
+            await handleRegister({ username, email, password })
+            toast.success("Account created successfully! Please login.")
+            navigate("/login", { replace: true })
+        } catch(err) {
+            toast.error(err || "Registration failed. Please try again.")
+        }
     }
 
     if (loading) {

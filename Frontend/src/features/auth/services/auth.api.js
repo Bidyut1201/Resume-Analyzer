@@ -2,6 +2,7 @@ import axios from "axios"
 
 const api = axios.create({
     baseURL: "https://resume-analyzer-backend-g7tz.onrender.com",
+    // baseURL: "http://localhost:3000",
     withCredentials: true
 })
 
@@ -13,13 +14,9 @@ export async function register({ username, email, password }){
         const response = await api.post('/api/auth/register',{
             username, email, password
         })
-
         return response.data
-
     } catch(err){
-
-        console.log(err)
-
+        throw err.response?.data?.message || "Registration failed. Please try again."
     }
 }
 
@@ -29,11 +26,9 @@ export async function login({ email, password }){
         const response = await api.post("/api/auth/login",{
             email, password
         })
-
         return response.data
-
     } catch(err){
-        console.log(err)
+        throw err.response?.data?.message || "Login failed. Please try again"
     }
 }
 
@@ -44,7 +39,7 @@ export async function logout(){
 
         return response.data
     } catch(err){
-
+        throw err.response?.data?.message || "Logout failed."
     }
 }
 
@@ -57,6 +52,6 @@ export async function getMe(){
         return response.data
         
     } catch(err){
-        console.log(err)
+       return null
     }
 }

@@ -57,7 +57,7 @@ const Landing = () => {
                                 <span className='pdot pdot--yellow' />
                                 <span className='pdot pdot--green' />
                                 <span className='preview-card__title'>
-                                    ResumeIntelligence — Match Report
+                                    ResumeAnalyzer — Match Report
                                 </span>
                             </div>
                             <div className='preview-card__body'>
@@ -171,7 +171,7 @@ const Landing = () => {
             {/* FROM SUBMISSION TO SHORTLIST */}
             <section className='process-section' id='process'>
                 <div className='process-section__eyebrow'>From Submission to Shortlist</div>
-                <div className='process-section__title'>How ResumeIntelligence works under the hood.</div>
+                <div className='process-section__title'>How ResumeAnalyzer works under the hood.</div>
                 <div className='process-card'>
                     <div className='process-card__header'>Your report breakdown</div>
                     <div className='process-row'>
@@ -219,8 +219,8 @@ const Landing = () => {
 
             {/* FOOTER */}
             <footer className='landing-footer'>
-                <div className='landing-footer__logo'>Resume<em>Intelligence</em></div>
-                <div className='landing-footer__copy'>© 2026 ResumeIntelligence. Built with NLP.</div>
+                <div className='landing-footer__logo'>Resume<em>Analyzer</em></div>
+                <div className='landing-footer__copy'>© 2026 ResumeAnalyzer. Built with NLP.</div>
                 <div className='landing-footer__links'>
                     <a href='#'>Privacy Policy</a>
                     <a href='#'>Terms of Service</a>
